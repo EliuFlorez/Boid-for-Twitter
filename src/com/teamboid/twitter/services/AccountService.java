@@ -73,11 +73,7 @@ public class AccountService extends Service {
                         @Override
                         public void run() {
                             pd.dismiss();
-                            Toast.makeText(
-                                    a.getApplicationContext(),
-                                    a.getString(R.string.authorization_error)
-                                            + "; " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(a.getApplicationContext(), a.getString(R.string.authorization_error) + "; " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
