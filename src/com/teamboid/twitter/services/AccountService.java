@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-import com.crittercism.app.Crittercism;
 import com.teamboid.twitter.Account;
 import com.teamboid.twitter.LoginHandler;
 import com.teamboid.twitter.R;
@@ -423,10 +422,6 @@ public class AccountService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        try {
-            Crittercism.init(getApplicationContext(), "503a15912cd9524709000002");
-        } catch (Exception e) {
-        }
         accounts = new ArrayList<Account>();
     }
 
@@ -439,9 +434,6 @@ public class AccountService extends Service {
             public void run() {
                 loadTwitterConfig();
                 loadAccounts();
-
-                if (accounts.size() > 0)
-                    Crittercism.setUsername(accounts.get(0).getUser().getScreenName());
             }
 
         }).start();
@@ -452,7 +444,6 @@ public class AccountService extends Service {
     public IBinder onBind(Intent intent) {
         if (accounts.size() > 0) {
             getApplicationContext().sendBroadcast(new Intent(END_LOAD));
-            Crittercism.setUsername(accounts.get(0).getUser().getScreenName());
         }
         return null;
     }
