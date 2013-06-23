@@ -58,7 +58,7 @@ public class AccountService extends Service {
                 try {
                     client = TwitterFactory.getSingleton();
                     client.setOAuthConsumer("[consumer key]", "[consumer secret]");
-                    RequestToken requestToken = client.getOAuthRequestToken();
+                    RequestToken requestToken = client.getOAuthRequestToken(CALLBACK_URL);
                     String url = requestToken.getAuthorizationURL();
                     a.runOnUiThread(new Runnable() {
                         @Override
