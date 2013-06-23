@@ -1,6 +1,5 @@
 package com.teamboid.twitter.columns;
 
-import java.util.ArrayList;
 import android.content.Intent;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -14,12 +13,11 @@ import com.teamboid.twitter.cab.MessageConvoCAB;
 import com.teamboid.twitter.listadapters.MessageConvoAdapter;
 import com.teamboid.twitter.listadapters.MessageConvoAdapter.DMConversation;
 import com.teamboid.twitter.services.AccountService;
-import com.teamboid.twitter.notifications.NotificationService;
-import com.teamboid.twitterapi.client.Paging;
-import com.teamboid.twitterapi.dm.DirectMessage;
-import com.teamboid.twitterapi.search.Tweet;
-import com.teamboid.twitterapi.status.Status;
-import com.teamboid.twitterapi.user.User;
+import twitter4j.DirectMessage;
+import twitter4j.ResponseList;
+import twitter4j.Status;
+
+import java.util.ArrayList;
 
 /**
  * Represents the column that displays the current user's direct messaging conversations.
@@ -27,6 +25,7 @@ import com.teamboid.twitterapi.user.User;
  * @author Aidan Follestad
  */
 public class MessagesFragment extends BaseListFragment<DMConversation> {
+
     public static final String ID = "COLUMNTYPE:MESSAGES";
 
     @Override
@@ -47,13 +46,9 @@ public class MessagesFragment extends BaseListFragment<DMConversation> {
     }
 
     @Override
-    public Status[] getSelectedStatuses() { return null; }
-
-    @Override
-    public User[] getSelectedUsers() { return null; }
-
-    @Override
-    public Tweet[] getSelectedTweets() { return null; }
+    public Status[] getSelectedStatuses() {
+        return null;
+    }
 
     @Override
     public DMConversation[] getSelectedMessages() {
@@ -70,58 +65,50 @@ public class MessagesFragment extends BaseListFragment<DMConversation> {
         return toReturn.toArray(new DMConversation[0]);
     }
 
-	@Override
-	public String getColumnName() {
-		return AccountService.getCurrentAccount().getId() + ".dm_list";
-	}
+    @Override
+    public String getColumnName() {
+        return AccountService.getCurrentAccount().getId() + ".dm_list";
+    }
 
-	@Override
-	public void setupAdapter() {
-		if(AccountService.getCurrentAccount() != null){
-			MessageConvoAdapter adapt = AccountService.getMessageConvoAdapter(getActivity(),
-	                AccountService.getCurrentAccount().getId());
-			adapt.list = getListView();
-			setListAdapter(adapt);
-		}
-	}
+    @Override
+    public void setupAdapter() {
+        if (AccountService.getCurrentAccount() != null) {
+            MessageConvoAdapter adapt = AccountService.getMessageConvoAdapter(getActivity(),
+                    AccountService.getCurrentAccount().getId());
+            adapt.list = getListView();
+            setListAdapter(adapt);
+        }
+    }
 
-	@Override
-	public DMConversation[] fetch(long maxId, long sinceId) {
-		try{
-			Paging paging = new Paging(20);
-			if(maxId != -1){
-				paging.setMaxId(maxId);
-			}
-			
-			Account acc = AccountService.getCurrentAccount();
-			
-			final ArrayList<DirectMessage> messages = new ArrayList<DirectMessage>();
-            DirectMessage[] recv = acc.getClient().getDirectMessages(paging);
-            if (recv != null && recv.length > 0) {
+    @Override
+    public DMConversation[] fetch(long maxId, long sinceId) {
+        try {
+            Account acc = AccountService.getCurrentAccount();
+
+            final ArrayList<DirectMessage> messages = new ArrayList<DirectMessage>();
+            ResponseList<DirectMessage> recv = acc.getClient().getDirectMessages();
+            if (recv != null && recv.size() > 0) {
                 for (DirectMessage msg : recv) messages.add(msg);
             }
-            DirectMessage[] sent = acc.getClient().getSentDirectMessages(paging);
-            if (sent != null && sent.length > 0) {
+            ResponseList<DirectMessage> sent = acc.getClient().getSentDirectMessages();
+            if (sent != null && sent.size() > 0) {
                 for (DirectMessage msg : sent) messages.add(msg);
             }
-            
-            // REALLY BAD!
-            getActivity().runOnUiThread(new Runnable(){
 
-				@Override
-				public void run() {
-					((MessageConvoAdapter)getListAdapter()).add(messages.toArray(new DirectMessage[]{}));
-				}
-            	
+            // REALLY BAD!
+            getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    ((MessageConvoAdapter) getListAdapter()).add(messages.toArray(new DirectMessage[]{}));
+                }
+
             });
-            
-            NotificationService.setReadDMs(acc.getId(), getActivity());
-            
             return null;
-		} catch(Exception e){
-			e.printStackTrace();
-			showError(e.getMessage());
-			return null;
-		}
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError(e.getMessage());
+            return null;
+        }
+    }
 }

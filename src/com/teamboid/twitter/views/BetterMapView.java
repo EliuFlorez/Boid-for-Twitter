@@ -8,8 +8,7 @@ import android.util.AttributeSet;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-
-import com.teamboid.twitterapi.status.GeoLocation;
+import twitter4j.GeoLocation;
 
 /**
  * @author kennydude

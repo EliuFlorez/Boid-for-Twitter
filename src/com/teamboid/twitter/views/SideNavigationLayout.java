@@ -148,7 +148,7 @@ public class SideNavigationLayout extends FrameLayout {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		if (enabled == false)
+		if (!enabled)
 			return false;
 		boolean shouldIntercept = false;
 		final int action = event.getAction();
@@ -184,7 +184,7 @@ public class SideNavigationLayout extends FrameLayout {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (enabled == false)
+		if (!enabled)
 			return false;
 		int action = event.getAction();
 		if (action == MotionEvent.ACTION_DOWN) {

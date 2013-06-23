@@ -16,9 +16,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-
-import com.teamboid.twitterapi.client.Paging;
-import com.teamboid.twitterapi.status.Status;
+import twitter4j.Paging;
+import twitter4j.ResponseList;
+import twitter4j.Status;
 
 /**
  * @author Aidan Follestad
@@ -27,19 +27,19 @@ public class TweetListActivity extends ListActivity {
 
 	private int lastTheme;
 	private boolean showProgress;
-	private Status[] tweets = null;
-	
+	private ResponseList<Status> tweets = null;
+
 	private boolean allowPagination = true;
 	public FeedListAdapter binder;
 	private ProgressDialog progDialog;
-	
+
 	public void showProgress(final boolean visible) {
 		if(showProgress == visible && progDialog != null) {
 			return;
 		}
 		runOnUiThread(new Runnable() {
 			@Override
-			public void run() { 
+			public void run() {
 				setProgressBarIndeterminateVisibility(visible);
 				if(showProgress) {
 					progDialog.dismiss();
@@ -91,7 +91,7 @@ public class TweetListActivity extends ListActivity {
         getListView().setMultiChoiceModeListener(TimelineCAB.choiceListener);
 		setProgressBarIndeterminateVisibility(false);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -113,8 +113,7 @@ public class TweetListActivity extends ListActivity {
 							public void run() { setTitle(getString(R.string.user_favorites).replace("{user}", getIntent().getStringExtra("username"))); }
 						});
 						if(binder.getCount() > 0) paging.setMaxId(binder.getItemId(binder.getCount() - 1));
-						tweets = AccountService.getCurrentAccount().getClient()
-                                .getFavorites(paging, getIntent().getStringExtra("username"));
+						tweets = AccountService.getCurrentAccount().getClient().getFavorites(getIntent().getStringExtra("username"), paging);
 						break;
 					case USER_LIST:
 						runOnUiThread(new Runnable() {
@@ -122,14 +121,14 @@ public class TweetListActivity extends ListActivity {
 							public void run() { setTitle(getIntent().getStringExtra("list_name")); }
 						});
 						if(binder.getCount() > 0) paging.setMaxId(binder.getItemId(binder.getCount() - 1));
-						tweets = AccountService.getCurrentAccount().getClient()
-                                .getListTimeline(getIntent().getLongExtra("list_ID", 0), paging);
+						tweets = AccountService.getCurrentAccount().getClient().getUserListStatuses(
+                                (int)getIntent().getLongExtra("list_ID", 0), paging);
 						break;
 					}
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							if(tweets == null || tweets.length == 0) {
+							if(tweets == null || tweets.size() == 0) {
 								allowPagination = false;
 								showProgress(false);
 								return;
@@ -139,7 +138,7 @@ public class TweetListActivity extends ListActivity {
 							showProgress(false);
 						}
 					});
-				} catch(final Exception e) { 
+				} catch(final Exception e) {
 					e.printStackTrace();
 					runOnUiThread(new Runnable() {
 						@Override
@@ -169,9 +168,9 @@ public class TweetListActivity extends ListActivity {
 		case android.R.id.home:
 			//startActivity(new Intent(this, TimelineScreen.class));
 			//finish();
-			
+
 			super.onBackPressed(); //Back button should go back, not restart a new activity
-			
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

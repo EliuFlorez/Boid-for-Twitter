@@ -11,8 +11,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
-
-import com.teamboid.twitterapi.status.GeoLocation;
+import twitter4j.GeoLocation;
 
 /**
  * @author kennydude
@@ -29,7 +28,7 @@ public class PolygonOverlay extends Overlay {
 	@Override
 	public boolean draw(Canvas canvas, MapView mapView, boolean shadow,
 			long when) {
-		if (shadow == false) {
+		if (!shadow) {
 			path = new Path();
 			Projection pr = mapView.getProjection();
 			Point ap = new Point();

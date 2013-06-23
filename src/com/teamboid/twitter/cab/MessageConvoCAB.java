@@ -1,7 +1,5 @@
 package com.teamboid.twitter.cab;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.view.ActionMode;
@@ -10,13 +8,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.Toast;
-
 import com.teamboid.twitter.R;
 import com.teamboid.twitter.TabsAdapter.BaseListFragment;
 import com.teamboid.twitter.listadapters.MessageConvoAdapter.DMConversation;
 import com.teamboid.twitter.services.AccountService;
+import twitter4j.DirectMessage;
 
-import com.teamboid.twitterapi.dm.DirectMessage;
+import java.util.ArrayList;
 
 /**
  * The contextual action bar for any lists/columns that display twitter4j.User objects.
@@ -55,10 +53,13 @@ public class MessageConvoCAB {
         private ActionMode actionMode;
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) { return false; }
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) { }
+        public void onDestroyActionMode(ActionMode mode) {
+        }
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content" android:layout_height="160dp">
-	<com.handlerexploit.prime.RemoteImageView android:id="@+id/mediaItemImage"
-		android:layout_width="160dp" android:layout_height="160dp"
-		android:scaleType="centerCrop" />
-	<TextView android:id="@+id/mediaItemProgress" android:layout_height="160dp"
-	    android:text="@string/dots"
-	    android:gravity="center"
-		android:padding="20dp" android:layout_width="fill_parent" />
+             android:layout_width="wrap_content" android:layout_height="160dp">
+    <com.teamboid.twitter.views.NetworkedCacheableImageView android:id="@+id/mediaItemImage"
+                                                            android:layout_width="160dp" android:layout_height="160dp"
+                                                            android:scaleType="centerCrop"/>
+    <TextView android:id="@+id/mediaItemProgress" android:layout_height="160dp"
+              android:text="@string/dots"
+              android:gravity="center"
+              android:padding="20dp" android:layout_width="fill_parent"/>
 </FrameLayout>

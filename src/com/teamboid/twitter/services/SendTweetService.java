@@ -47,7 +47,7 @@ public class SendTweetService extends Service {
 				stt.result.errorCode = Result.WAITING;
 				Intent update = new Intent(UPDATE_STATUS);
 				sendBroadcast(update);
-				if (stt.sendTweet(SendTweetService.this).sent == true) {
+				if (stt.sendTweet(SendTweetService.this).sent) {
 					try {
 						TimelineCAB.context.runOnUiThread(new Runnable() {
 							@Override
