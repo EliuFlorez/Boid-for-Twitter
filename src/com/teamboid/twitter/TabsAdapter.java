@@ -476,24 +476,28 @@ public class TabsAdapter extends TaggedFragmentAdapter {
         }
 
         @Override
-        public void setListShown(boolean shown) {
-            if (getView() == null) return;
-
-            View mProgressContainer = getView().findViewById(R.id.progressContainer);
-            View mListContainer = getView().findViewById(R.id.listContainer);
-            if (shown) {
-                getView().findViewById(android.R.id.empty).setVisibility(getAdapter().getCount() == 0 ? View.VISIBLE : View.GONE);
-
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-                mProgressContainer.setVisibility(View.GONE);
-                mListContainer.setVisibility(View.VISIBLE);
-            } else {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-                mProgressContainer.setVisibility(View.VISIBLE);
-                mListContainer.setVisibility(View.GONE);
-            }
+        public void setListShown(final boolean shown) {
+            final View v = getView();
+            if (v == null) return;
+            v.post(new Runnable() {
+                @Override
+                public void run() {
+                    View mProgressContainer = v.findViewById(R.id.progressContainer);
+                    View mListContainer = v.findViewById(R.id.listContainer);
+                    if (shown) {
+                        v.findViewById(android.R.id.empty).setVisibility(getAdapter().getCount() == 0 ? View.VISIBLE : View.GONE);
+//                        mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+//                        mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                        mProgressContainer.setVisibility(View.GONE);
+                        mListContainer.setVisibility(View.VISIBLE);
+                    } else {
+//                        mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+//                        mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+                        mProgressContainer.setVisibility(View.VISIBLE);
+                        mListContainer.setVisibility(View.GONE);
+                    }
+                }
+            });
         }
 
         public void loadMore() {
