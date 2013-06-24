@@ -3,7 +3,7 @@ Dependencies
 
 The following libraries must be imported into IntelliJ or Eclipse as Android Libraries and referenced from the main project:
 
-* https://github.com/kennydude/AwesomePrefs.git
+* https://github.com/afollestad/AwesomePrefs
 * https://github.com/afollestad/android-billing-library
 * https://github.com/chrisbanes/Android-BitmapCache
 
